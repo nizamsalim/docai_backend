@@ -1,0 +1,29 @@
+[project]
+name = "docai_backend"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.13"
+authors = [
+    {name = "Nizam Salim", email = "nizam.salim7@gmail.com"}
+]
+
+dependencies = [
+    "flask (>=3.1.2,<4.0.0)",
+    "pydantic (>=2.12.4,<3.0.0)",
+    "sqlalchemy (>=2.0.44,<3.0.0)",
+    "flask-sqlalchemy (>=3.1.1,<4.0.0)",
+    "python-dotenv (>=1.2.1,<2.0.0)",
+    "psycopg2 (>=2.9.11,<3.0.0)",
+    "flask-migrate (>=4.1.0,<5.0.0)",
+    "alembic (>=1.17.2,<2.0.0)",
+    "pyjwt (>=2.10.1,<3.0.0)",
+]
+
+packages = [{ include = "docai_backend" }]
+
+[tool.poetry.scripts]
+flask = "flask.cli:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
