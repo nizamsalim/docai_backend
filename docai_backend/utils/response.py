@@ -12,3 +12,9 @@ class ResponseBuilder:
                 samesite="None", 
             )
         return response
+    
+    @staticmethod
+    def logout():
+        response = make_response({"success":True})
+        response.delete_cookie("access_token",httponly=True,secure=True,samesite="None")
+        return response

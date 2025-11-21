@@ -22,7 +22,11 @@ def login():
     res,auth_token = service.login_user(data)
     return ResponseBuilder.response(res.to_dict(),auth_token,"user")
 
-@auth_blueprint.route("/me",methods=["POST"])
+@auth_blueprint.route("/logout",methods=["POST"])
+def logout():
+    return ResponseBuilder.logout()
+
+@auth_blueprint.route("/me",methods=["GET"])
 def validate():
     access_token = request.cookies.get("access_token")
     res = service.validate_user(access_token)
