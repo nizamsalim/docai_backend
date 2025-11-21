@@ -1,6 +1,6 @@
 from ..repositories.user_repository import UserRepository
 from ..schemas.auth_schema import RegisterRequest,LoginRequest
-from ..utils.exception import UserExistsError,ServiceError,InvalidCredentialsError
+from ..utils.exception import UserExistsError,ServiceError,InvalidCredentialsError,InvalidAccessTokenError,MissingAccessTokenError
 from ..models.user_model import User
 from ..contracts.user_dto import UserDTO
 from werkzeug.security import generate_password_hash as create_hash,check_password_hash as check_password
@@ -47,6 +47,25 @@ class AuthService:
                 id=db_user.id,
             ),JWTProvider.create_token(db_user.id)
         except InvalidCredentialsError:
+            raise
+        except Exception as e:
+            print(str(e))
+            raise ServiceError()
+    
+    def validate_user(self,access_token:str) -> UserDTO:
+        try:
+            payload = JWTProvider.decode_token(access_token)
+            user = self.repo.find_by_id(payload["id"])
+            if user is None:
+                raise InvalidAccessTokenError
+            return UserDTO(
+                name=user.name,
+                username=user.username,
+                id=user.id,
+            )
+        except InvalidAccessTokenError:
+            raise
+        except MissingAccessTokenError:
             raise
         except Exception as e:
             print(str(e))

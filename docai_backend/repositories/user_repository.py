@@ -11,6 +11,15 @@ class UserRepository:
         except:
             raise DatabaseError()
     
+    def find_by_id(self,id:str) -> User|None :
+        try:
+            user:User|None = db.session.execute(
+                db.select(User).filter(User.id == id)
+            ).scalar_one_or_none()
+            return user
+        except:
+            raise DatabaseError()
+    
     def create(self,user:User):
         try:
             db.session.add(user)

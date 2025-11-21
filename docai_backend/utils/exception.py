@@ -32,4 +32,13 @@ class InvalidCredentialsError(BaseAppException):
     def __init__(self,data=None,message="Invalid login credentials",code="INVALID_CREDENTIALS_ERROR"):
         super().__init__(message,data,code)
 
+class MissingAccessTokenError(BaseAppException):
+    status_code = 401
+    def __init__(self,data=None,message="Access token is missing",code="MISSING_ACCESS_TOKEN_ERROR"):
+        super().__init__(message,data,code)
+class InvalidAccessTokenError(BaseAppException):
+    status_code = 401
+    def __init__(self,data=None,message="Access token is invalid",code="INVALID_ACCESS_TOKEN_ERROR"):
+        super().__init__(message,data,code)
+
 

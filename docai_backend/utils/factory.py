@@ -13,7 +13,8 @@ def register_error_handlers(app):
             "success": False,
             "message": error.message,
             "error": error.data,
-            "errorCode":error.error_code
+            "errorCode":error.error_code,
+            "statusCode":error.status_code
         }
         if response["error"] == {}:
             del response["error"]
@@ -30,7 +31,8 @@ def register_error_handlers(app):
             "success": False,
             "message": "Input validation failed",
             "error": e,
-            "errorCode":"VALIDATION_ERROR"
+            "errorCode":"VALIDATION_ERROR",
+            "statusCode":422
         }
         return jsonify(response), 422
 

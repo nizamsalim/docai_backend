@@ -97,6 +97,22 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-cors"
+version = "6.0.1"
+description = "A Flask extension simplifying CORS support"
+optional = false
+python-versions = "<4.0,>=3.9"
+groups = ["main"]
+files = [
+    {file = "flask_cors-6.0.1-py3-none-any.whl", hash = "sha256:c7b2cbfb1a31aa0d2e5341eea03a6805349f7a61647daee1a15c46bbe981494c"},
+    {file = "flask_cors-6.0.1.tar.gz", hash = "sha256:d81bcb31f07b0985be7f48406247e9243aced229b7747219160a0559edd678db"},
+]
+
+[package.dependencies]
+flask = ">=0.9"
+Werkzeug = ">=0.7"
+
+[[package]]
 name = "flask-migrate"
 version = "4.1.0"
 description = "SQLAlchemy database migrations for Flask applications using Alembic."
@@ -712,5 +728,5 @@ watchdog = ["watchdog (>=2.3)"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.13"
-content-hash = "334799ee8350757eadb273b251d7b4a8dac357fd89db2185ddd561f1294feab6"
+python-versions = ">=3.13,<4.0"
+content-hash = "23100e6f4cb07c9c923853a2f387e3db73d5f717e91f9858c617e4aa2c0ca2a3"
