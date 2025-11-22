@@ -1,5 +1,5 @@
 from ..repositories.user_repository import UserRepository
-from ..schemas.auth_schema import RegisterRequest,LoginRequest
+from ..schemas.auth_schema import RegisterSchema,LoginSchema
 from ..utils.exception import UserExistsError,ServiceError,InvalidCredentialsError,InvalidAccessTokenError,MissingAccessTokenError
 from ..models.user_model import User
 from ..contracts.user_dto import UserDTO
@@ -11,7 +11,7 @@ class AuthService:
     def __init__(self,repo:UserRepository):
         self.repo = repo
     
-    def register_user(self,user:RegisterRequest)-> tuple[UserDTO,str]:
+    def register_user(self,user:RegisterSchema)-> tuple[UserDTO,str]:
         try:
             user_exists = self.repo.find_by_username(user.username)
             if user_exists:
@@ -34,7 +34,7 @@ class AuthService:
         except:
             raise ServiceError()
     
-    def login_user(self,user:LoginRequest)-> tuple[UserDTO,str]:
+    def login_user(self,user:LoginSchema)-> tuple[UserDTO,str]:
         try:
             db_user = self.repo.find_by_username(user.username)
             if db_user is None:

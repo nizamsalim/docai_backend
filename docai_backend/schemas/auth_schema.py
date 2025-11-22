@@ -6,13 +6,13 @@ def validate_password(cls,val):
             raise ValidationError(data=[{"field":"password","message":"Password should have a minimum length of 6 characters"}])
         return val
 
-class LoginRequest(BaseModel):
+class LoginSchema(BaseModel):
     username:str
     password:str
 
     _validate_password = field_validator("password",mode="before")(validate_password)
 
-class RegisterRequest(BaseModel):
+class RegisterSchema(BaseModel):
     name:str
     username:str
     password:str
