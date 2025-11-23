@@ -35,3 +35,9 @@ def get_all_projects():
 def get_project(project_id: str):
     res = service.get_project_data(project_id)
     return ResponseBuilder.response(res.to_dict(), data_item="project")
+
+
+@project_blueprint.route("/llm-test/<string:project_id>", methods=["GET"])
+def test_llm(project_id: str):
+    res = service.test_llm(project_id)
+    return ResponseBuilder.response(res, data_item="content")

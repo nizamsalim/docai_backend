@@ -1,5 +1,6 @@
 from ..repositories.project_repository import ProjectRepository
 from ..repositories.section_repository import SectionRepository
+from ..llm.llm_service import LLMService
 from ..schemas.project_schema import CreateProjectSchema as ProjectSchema
 from ..utils.exception import ServiceError, DatabaseError, ResourceNotFoundError
 from ..models.project_model import Project
@@ -9,10 +10,14 @@ from ..contracts.project_dto import ProjectDTO, SectionDTO
 
 class ProjectService:
     def __init__(
-        self, project_repo: ProjectRepository, section_repo: SectionRepository
+        self,
+        project_repo: ProjectRepository,
+        section_repo: SectionRepository,
+        llm_service: LLMService,
     ):
         self.project_repo = project_repo
         self.section_repo = section_repo
+        self.llm_service = llm_service
 
     def create_project(self, project: ProjectSchema):
         project_id = None
@@ -24,14 +29,22 @@ class ProjectService:
                 section_count=len(project.sections),
             )
             new_project = self.project_repo.create(new_project)
+            print("Project created")
 
             project_id = new_project.id
 
-            for section in project.sections:
+            new_sections: list[Section] = []
+            for i, section in enumerate(project.sections):
                 new_section = Section(
                     title=section.title, order=section.order, project_id=project_id
                 )
-                self.section_repo.create(new_section)
+                content = self.llm_service.generate_initial_content(
+                    new_project, new_section
+                )
+                print(f"Section {i+1} generated")
+                new_section.content = content
+                new_sections.append(new_section)
+            self.section_repo.create_many(new_sections)
 
             # create sections
             return ProjectDTO(
@@ -41,6 +54,16 @@ class ProjectService:
                 section_count=new_project.section_count,
                 created_at=new_project.created_at,
                 updated_at=new_project.updated_at,
+                sections=[
+                    SectionDTO(
+                        id=section.id,
+                        title=section.title,
+                        content=section.content,
+                        order=section.order,
+                        project_id=section.project_id,
+                    )
+                    for section in new_project.sections
+                ],
             )
         except DatabaseError:
             raise
@@ -99,3 +122,10 @@ class ProjectService:
             raise
         except Exception as e:
             raise ServiceError(str(e))
+
+    def test_llm(self, project_id: str):
+        project = self.project_repo.find_by_id(project_id)
+        section = project.sections[0]
+        res = self.llm_service.generate_initial_content(project, section, "gemini")
+        print(res)
+        return res
