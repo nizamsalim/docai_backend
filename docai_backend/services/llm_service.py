@@ -1,8 +1,8 @@
-from .context_builder import ContextBuilder
-from .prompt_builder import PromptBuilder
+from ..llm.context_builder import ContextBuilder
+from ..llm.prompt_builder import PromptBuilder
 from ..models.project_model import Project
 from ..models.section_model import Section
-from .providers import ModelRegistry
+from ..llm.providers import ModelRegistry
 from ..utils.exception import LLMError
 
 
@@ -29,14 +29,14 @@ class LLMService:
 
     def refine_section(
         self,
-        project: Project,
+        project_id: str,
         section: Section,
         user_instruction: str,
         context_mode="section",
         model_name="gemini",
     ):
         try:
-            context = self.context_builder.build(project.id, section.id, context_mode)
+            context = self.context_builder.build(project_id, section.id, context_mode)
 
             prompt = self.prompt_builder.get_refinement_prompt(
                 section.title, section.content, user_instruction, context

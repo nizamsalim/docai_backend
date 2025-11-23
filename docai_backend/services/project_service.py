@@ -1,8 +1,13 @@
 from ..repositories.project_repository import ProjectRepository
 from ..repositories.section_repository import SectionRepository
-from ..llm.llm_service import LLMService
+from .llm_service import LLMService
 from ..schemas.project_schema import CreateProjectSchema as ProjectSchema
-from ..utils.exception import ServiceError, DatabaseError, ResourceNotFoundError
+from ..utils.exception import (
+    ServiceError,
+    DatabaseError,
+    ResourceNotFoundError,
+    LLMError,
+)
 from ..models.project_model import Project
 from ..models.section_model import Section
 from ..contracts.project_dto import ProjectDTO, SectionDTO
@@ -19,7 +24,7 @@ class ProjectService:
         self.section_repo = section_repo
         self.llm_service = llm_service
 
-    def create_project(self, project: ProjectSchema):
+    def create_project(self, project: ProjectSchema) -> ProjectDTO:
         project_id = None
         try:
             # create project
@@ -66,6 +71,8 @@ class ProjectService:
                 ],
             )
         except DatabaseError:
+            raise
+        except LLMError:
             raise
         except Exception as e:
             print(str(e))
