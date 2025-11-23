@@ -3,9 +3,7 @@ from flask import make_response
 
 class ResponseBuilder:
     @staticmethod
-    def response(
-        data: dict | list | str, auth_token: str = None, data_item: str = "data"
-    ):
+    def auth_response(data: dict, auth_token: str = None, data_item: str = "data"):
         response = make_response({"success": True, data_item: data})
         if auth_token:
             response.set_cookie(
@@ -16,6 +14,11 @@ class ResponseBuilder:
                 samesite="None",
             )
         return response
+
+    @staticmethod
+    def response(data: dict | list | str, data_item: str):
+        res = make_response({"success": True, data_item: data})
+        return res
 
     @staticmethod
     def logout():
