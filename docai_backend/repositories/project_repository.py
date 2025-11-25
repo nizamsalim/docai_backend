@@ -14,6 +14,14 @@ class ProjectRepository:
             db.session.rollback()
             raise DatabaseError()
 
+    def update(self, project: Project):
+        try:
+            db.session.commit()
+            return project
+        except:
+            db.session.rollback()
+            raise DatabaseError()
+
     def find_all(self) -> list[Project]:
         try:
             result = db.session.execute(db.select(Project)).scalars()

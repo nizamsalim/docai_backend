@@ -1,7 +1,10 @@
 from ..repositories.project_repository import ProjectRepository
 from ..repositories.section_repository import SectionRepository
 from .llm_service import LLMService
-from ..schemas.project_schema import CreateProjectSchema as ProjectSchema
+from ..schemas.project_schema import (
+    CreateProjectSchema as ProjectSchema,
+    UpdateProjectSchema,
+)
 from ..utils.exception import (
     ServiceError,
     DatabaseError,
@@ -122,6 +125,30 @@ class ProjectService:
                     )
                     for section in project.sections
                 ],
+            )
+        except DatabaseError:
+            raise
+        except ResourceNotFoundError:
+            raise
+        except Exception as e:
+            raise ServiceError(str(e))
+
+    def update_project(self, project_id: str, body: UpdateProjectSchema):
+        try:
+            project = self.project_repo.find_by_id(project_id)
+            if project is None:
+                raise ResourceNotFoundError(
+                    message=f"Project with id: {project_id} not found"
+                )
+            project.title = body.title
+            project: Project = self.project_repo.update(project)
+            return ProjectDTO(
+                id=project.id,
+                title=project.title,
+                type=project.type,
+                section_count=project.section_count,
+                created_at=project.created_at,
+                updated_at=project.updated_at,
             )
         except DatabaseError:
             raise

@@ -1,5 +1,5 @@
 from ..repositories.section_repository import SectionRepository
-from ..schemas.section_schema import RefineSectionSchema
+from ..schemas.section_schema import RefineSectionSchema, UpdateSectionSchema
 from ..utils.exception import (
     DatabaseError,
     ServiceError,
@@ -41,6 +41,32 @@ class SectionService:
         except DatabaseError:
             raise
         except LLMError:
+            raise
+        except ResourceNotFoundError:
+            raise
+        except Exception as e:
+            raise ServiceError(str(e))
+
+    def update_section(self, section_id: str, body: UpdateSectionSchema):
+        try:
+            section = self.section_repo.find_by_id(section_id)
+            if section is None:
+                raise ResourceNotFoundError(
+                    message=f"Section with id: {section_id} not found."
+                )
+            if body.title:
+                section.title = body.title
+            if body.content:
+                section.content = body.content
+            section = self.section_repo.update(section)
+            return SectionDTO(
+                id=section.id,
+                title=section.title,
+                content=section.content,
+                order=section.order,
+                project_id=section.project_id,
+            )
+        except DatabaseError:
             raise
         except ResourceNotFoundError:
             raise

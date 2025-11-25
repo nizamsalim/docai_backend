@@ -1,9 +1,8 @@
 from flask import Blueprint, request
 from ..utils.factory import get_project_service
 from ..middleware.protected import protected
-from ..schemas.project_schema import CreateProjectSchema
+from ..schemas.project_schema import CreateProjectSchema, UpdateProjectSchema
 from ..utils.response import ResponseBuilder
-import json
 
 project_blueprint = Blueprint("projects", __name__)
 
@@ -34,6 +33,14 @@ def get_all_projects():
 @protected
 def get_project(project_id: str):
     res = service.get_project_data(project_id)
+    return ResponseBuilder.response(res.to_dict(), data_item="project")
+
+
+@project_blueprint.route("/<string:project_id>", methods=["PUT"])
+@protected
+def update_project(project_id: str):
+    body = UpdateProjectSchema(**(request.get_json()))
+    res = service.update_project(project_id, body)
     return ResponseBuilder.response(res.to_dict(), data_item="project")
 
 

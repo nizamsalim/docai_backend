@@ -16,11 +16,12 @@ class PromptBuilder:
         return f"""
             You are an AI assistant helping to create a new document of type {project_type}.
             {format_prompt}
+            Return markdown content with appropriate formating, spacing, etc.
             Document title: {project_title}
             Write a high-quality first draft for a section titled: {section_title}
             The length should be not too long, nor too short. It should have moderate length.
             The tone should be clear, structured, and informative.
-            Avoid filler sentences. Provide useful content.
+            Avoid filler sentences. Provide useful content. Include section title as heading in each section content
             Return only the requested text without any extra content.
         """
 
@@ -36,6 +37,6 @@ class PromptBuilder:
             \n\n
             {context}
 
-            Rewrite the content according to the instruction while keeping meaning consistent.
+            Rewrite the content according to the instruction while keeping meaning and formatting consistent.
             Ensure the output is final, clean, and ready to insert. Return only the requested text without any extra content
         """
