@@ -26,6 +26,7 @@ def create_app():
     from .models.user_model import User
     from .models.project_model import Project
     from .models.section_model import Section
+    from .models.refinement_model import Refinement
 
     app.register_blueprint(auth_blueprint, url_prefix="/api/v1/auth")
     app.register_blueprint(project_blueprint, url_prefix="/api/v1/projects")
