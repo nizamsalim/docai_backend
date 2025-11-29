@@ -37,8 +37,20 @@ def comment_section(section_id: str):
     return ResponseBuilder.response(res, "comment")
 
 
-# @section_blueprint.route("/<string:section_id>/comment/<string:comment_id>",methods=["PUT"])
-# @protected
-# def update_comment(section_id:str,comment_id:str):
-#     body = CommentSchema(**(request.get_json()))
-#     res = service
+@section_blueprint.route(
+    "/<string:section_id>/comments/<string:comment_id>", methods=["PUT"]
+)
+@protected
+def update_comment(section_id: str, comment_id: str):
+    body = CommentSchema(**(request.get_json()))
+    res = service.update_section_comment(section_id, comment_id, body)
+    return ResponseBuilder.response(res, "comment")
+
+
+@section_blueprint.route(
+    "/<string:section_id>/comments/<string:comment_id>", methods=["DELETE"]
+)
+@protected
+def delete_comment(section_id: str, comment_id: str):
+    res = service.delete_section_comment(section_id, comment_id)
+    return ResponseBuilder.response(res, "comment")

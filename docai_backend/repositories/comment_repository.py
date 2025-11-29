@@ -20,3 +20,20 @@ class CommentRepository:
         except:
             db.session.rollback()
             raise DatabaseError()
+
+    def delete(self, comment: Comment):
+        try:
+            db.session.delete(comment)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise DatabaseError()
+
+    def find_by_id(self, comment_id: str) -> Comment | None:
+        try:
+            comment = db.session.execute(
+                db.select(Comment).filter(Comment.id == comment_id)
+            ).scalar_one_or_none()
+            return comment
+        except Exception as e:
+            raise DatabaseError(str(e))

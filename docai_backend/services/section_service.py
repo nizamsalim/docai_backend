@@ -152,7 +152,28 @@ class SectionService:
         self, section_id: str, comment_id: str, body: CommentSchema
     ):
         try:
-            pass
+            comment = self.comment_repo.find_by_id(comment_id)
+            if comment is None:
+                raise ResourceNotFoundError(f"Comment with id: {comment_id} not found")
+            comment.content = body.content
+            comment = self.comment_repo.update(comment)
+            return CommentDTO(
+                id=comment.id, section_id=comment.section_id, content=comment.content
+            )
+        except DatabaseError:
+            raise
+        except ResourceNotFoundError:
+            raise
+        except Exception as e:
+            raise ServiceError(str(e))
+
+    def delete_section_comment(self, section_id: str, comment_id: str):
+        try:
+            comment = self.comment_repo.find_by_id(comment_id)
+            if comment is None:
+                raise ResourceNotFoundError(f"Comment with id: {comment_id} not found")
+            self.comment_repo.delete(comment)
+            return dict()
         except DatabaseError:
             raise
         except ResourceNotFoundError:
