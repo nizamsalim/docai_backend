@@ -14,7 +14,7 @@ from ..utils.exception import (
 from ..models.project_model import Project
 from ..models.section_model import Section
 from ..contracts.project_dto import ProjectDTO
-from ..contracts.section_dto import RefinementDTO, SectionDTO
+from ..contracts.section_dto import RefinementDTO, SectionDTO, CommentDTO
 
 
 class ProjectService:
@@ -133,6 +133,12 @@ class ProjectService:
                                 after_content=r.after_content,
                             )
                             for r in list(section.refinements)[::-1]
+                        ],
+                        comments=[
+                            CommentDTO(
+                                id=c.id, section_id=c.section_id, content=c.content
+                            )
+                            for c in section.comments
                         ],
                     )
                     for section in project.sections

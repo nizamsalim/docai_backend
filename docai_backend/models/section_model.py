@@ -21,3 +21,7 @@ class Section(db.Model):
         back_populates="section",
         cascade="all, delete-orphan",
     )
+
+    comments = db.relationship(
+        "Comment", back_populates="section", cascade="all, delete-orphan"
+    )

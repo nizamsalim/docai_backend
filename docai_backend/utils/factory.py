@@ -2,6 +2,7 @@ from ..repositories.user_repository import UserRepository
 from ..repositories.project_repository import ProjectRepository
 from ..repositories.section_repository import SectionRepository
 from ..repositories.refinement_repository import RefinementRepository
+from ..repositories.comment_repository import CommentRepository
 
 from ..services.auth_service import AuthService
 from ..services.project_service import ProjectService
@@ -39,8 +40,9 @@ def get_project_service():
 def get_section_service():
     section_repo = SectionRepository()
     refinement_repo = RefinementRepository()
+    comment_repo = CommentRepository()
     llm_service = get_llm_service()
-    service = SectionService(section_repo, refinement_repo, llm_service)
+    service = SectionService(section_repo, refinement_repo, comment_repo, llm_service)
     return service
 
 

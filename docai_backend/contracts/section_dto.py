@@ -22,6 +22,16 @@ class RefinementDTO:
 
 
 @d
+class CommentDTO:
+    id: str
+    section_id: str
+    content: str
+
+    def to_dict(self):
+        return {"id": self.id, "sectionId": self.section_id, "content": self.content}
+
+
+@d
 class SectionDTO:
     id: str
     title: str
@@ -29,6 +39,7 @@ class SectionDTO:
     order: int
     project_id: str
     refinements: list[RefinementDTO] | None = None
+    comments: list[CommentDTO] | None = None
 
     def to_dict(self):
         return {
@@ -38,6 +49,7 @@ class SectionDTO:
             "order": self.order,
             "projectId": self.project_id,
             "refinements": (
-                [r.to_dict() for r in self.refinements] if self.refinements else None
+                [r.to_dict() for r in self.refinements] if self.refinements else []
             ),
+            "comments": [c.to_dict() for c in self.comments] if self.comments else [],
         }
