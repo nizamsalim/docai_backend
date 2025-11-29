@@ -7,6 +7,7 @@ from .utils.db import db, migrate
 from .controllers.auth_controller import auth_blueprint
 from .controllers.project_controller import project_blueprint
 from .controllers.section_controller import section_blueprint
+from .controllers.refinement_controller import refinement_blueprint
 from .utils.error_handler import register_error_handlers
 from flask_cors import CORS
 
@@ -31,6 +32,7 @@ def create_app():
     app.register_blueprint(auth_blueprint, url_prefix="/api/v1/auth")
     app.register_blueprint(project_blueprint, url_prefix="/api/v1/projects")
     app.register_blueprint(section_blueprint, url_prefix="/api/v1/sections")
+    app.register_blueprint(refinement_blueprint, url_prefix="/api/v1/refinements")
 
     return app
 

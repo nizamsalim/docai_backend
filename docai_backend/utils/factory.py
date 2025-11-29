@@ -6,6 +6,7 @@ from ..repositories.refinement_repository import RefinementRepository
 from ..services.auth_service import AuthService
 from ..services.project_service import ProjectService
 from ..services.section_service import SectionService
+from ..services.refinement_service import RefinementService
 
 from ..services.llm_service import LLMService
 from ..llm.context_builder import ContextBuilder
@@ -40,4 +41,11 @@ def get_section_service():
     refinement_repo = RefinementRepository()
     llm_service = get_llm_service()
     service = SectionService(section_repo, refinement_repo, llm_service)
+    return service
+
+
+def get_refinement_service():
+    refinement_repo = RefinementRepository()
+    section_repo = SectionRepository()
+    service = RefinementService(refinement_repo, section_repo)
     return service

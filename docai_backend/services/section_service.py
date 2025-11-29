@@ -31,6 +31,7 @@ class SectionService:
                 raise ResourceNotFoundError(
                     message=f"Section with id: {section_id} not found"
                 )
+            before_content = section.content
             new_content = self.llm_service.refine_section(
                 section.project_id,
                 section,
@@ -40,7 +41,12 @@ class SectionService:
             section.content = new_content
             section = self.section_repo.update(section)
 
-            refinement = Refinement(prompt=body.user_instruction, section_id=section.id)
+            refinement = Refinement(
+                prompt=body.user_instruction,
+                section_id=section.id,
+                before_content=before_content,
+                after_content=new_content,
+            )
             self.refinement_repo.create(refinement)
 
             return SectionDTO(
@@ -55,8 +61,10 @@ class SectionService:
                         prompt=r.prompt,
                         rating=r.rating,
                         section_id=r.section_id,
+                        before_content=r.before_content,
+                        after_content=r.after_content,
                     )
-                    for r in section.refinements
+                    for r in list(section.refinements)[::-1]
                 ],
             )
         except DatabaseError:
@@ -86,6 +94,17 @@ class SectionService:
                 content=section.content,
                 order=section.order,
                 project_id=section.project_id,
+                refinements=[
+                    RefinementDTO(
+                        id=r.id,
+                        prompt=r.prompt,
+                        rating=r.rating,
+                        section_id=r.section_id,
+                        before_content=r.before_content,
+                        after_content=r.after_content,
+                    )
+                    for r in list(section.refinements)[::-1]
+                ],
             )
         except DatabaseError:
             raise

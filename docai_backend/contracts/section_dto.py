@@ -7,6 +7,8 @@ class RefinementDTO:
     prompt: str
     rating: str | None
     section_id: str
+    before_content: str
+    after_content: str
 
     def to_dict(self):
         return {
@@ -14,6 +16,8 @@ class RefinementDTO:
             "prompt": self.prompt,
             "rating": self.rating,
             "sectionId": self.section_id,
+            "beforeContent": self.before_content,
+            "afterContent": self.after_content,
         }
 
 
@@ -24,7 +28,7 @@ class SectionDTO:
     content: str
     order: int
     project_id: str
-    refinements: list[RefinementDTO] | None
+    refinements: list[RefinementDTO] | None = None
 
     def to_dict(self):
         return {

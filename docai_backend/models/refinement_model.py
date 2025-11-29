@@ -10,6 +10,9 @@ class Refinement(db.Model):
     prompt = db.Column(db.Text, nullable=False)
     rating = db.Column(db.String(8), nullable=True)
 
+    before_content = db.Column(db.Text, nullable=False)
+    after_content = db.Column(db.Text, nullable=False)
+
     section_id = db.Column(
         db.String(36), db.ForeignKey("sections.id", ondelete="CASCADE"), nullable=False
     )

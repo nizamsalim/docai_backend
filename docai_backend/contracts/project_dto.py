@@ -4,7 +4,6 @@ from .section_dto import SectionDTO
 
 
 @d
-@d
 class ProjectDTO:
     title: str
     type: str

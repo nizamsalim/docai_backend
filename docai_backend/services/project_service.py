@@ -70,15 +70,6 @@ class ProjectService:
                         content=section.content,
                         order=section.order,
                         project_id=section.project_id,
-                        refinements=[
-                            RefinementDTO(
-                                id=r.id,
-                                prompt=r.prompt,
-                                rating=r.rating,
-                                section_id=r.section_id,
-                            )
-                            for r in section.refinements
-                        ],
                     )
                     for section in new_project.sections
                 ],
@@ -138,8 +129,10 @@ class ProjectService:
                                 prompt=r.prompt,
                                 rating=r.rating,
                                 section_id=r.section_id,
+                                before_content=r.before_content,
+                                after_content=r.after_content,
                             )
-                            for r in section.refinements
+                            for r in list(section.refinements)[::-1]
                         ],
                     )
                     for section in project.sections
