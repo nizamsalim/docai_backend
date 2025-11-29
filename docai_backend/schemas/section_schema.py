@@ -9,3 +9,7 @@ class RefineSectionSchema(BaseModel):
 class UpdateSectionSchema(BaseModel):
     title: str | None = None
     content: str | None = None
+
+
+class CommentSchema(BaseModel):
+    content: str

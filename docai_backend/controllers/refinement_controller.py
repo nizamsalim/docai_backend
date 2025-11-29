@@ -8,7 +8,9 @@ refinement_blueprint = Blueprint("refinements", __name__)
 service = get_refinement_service()
 
 
-@refinement_blueprint.route("/<string:refinement_id>/<string:rating>", methods=["GET"])
+@refinement_blueprint.route(
+    "/<string:refinement_id>/<string:rating>", methods=["PATCH"]
+)
 @protected
 def rate_refinement(refinement_id: str, rating: str):
     res = service.rate_refinement(refinement_id, rating)
