@@ -25,7 +25,9 @@ class ProjectRepository:
 
     def find_all(self) -> list[Project]:
         try:
-            result = db.session.execute(db.select(Project)).scalars()
+            result = db.session.execute(
+                db.select(Project).order_by(Project.accessed_at.desc())
+            ).scalars()
             return result
         except SQLAlchemyError as e:
             raise DatabaseError(str(e))

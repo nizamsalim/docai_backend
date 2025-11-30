@@ -11,6 +11,7 @@ class ProjectDTO:
     id: str
     created_at: datetime
     updated_at: datetime
+    accessed_at: datetime
     sections: list[SectionDTO] | None = None
 
     def to_dict(self):
@@ -21,6 +22,7 @@ class ProjectDTO:
             "sectionCount": self.section_count,
             "createdAt": self.created_at.isoformat(),
             "updatedAt": self.updated_at.isoformat(),
+            "accessedAt": self.accessed_at.isoformat(),
             "sections": (
                 [s.to_dict() for s in self.sections]
                 if self.sections is not None

@@ -16,6 +16,7 @@ from ..models.project_model import Project
 from ..models.section_model import Section
 from ..contracts.project_dto import ProjectDTO
 from ..contracts.section_dto import RefinementDTO, SectionDTO, CommentDTO
+from datetime import datetime, timezone
 
 
 class ProjectService:
@@ -76,6 +77,7 @@ class ProjectService:
                 section_count=new_project.section_count,
                 created_at=new_project.created_at,
                 updated_at=new_project.updated_at,
+                accessed_at=new_project.accessed_at,
                 sections=[
                     SectionDTO(
                         id=section.id,
@@ -105,6 +107,7 @@ class ProjectService:
                     section_count=p.section_count,
                     created_at=p.created_at,
                     updated_at=p.updated_at,
+                    accessed_at=p.accessed_at,
                 )
                 for p in res
             ]
@@ -120,6 +123,8 @@ class ProjectService:
                 raise ResourceNotFoundError(
                     message=f"Project with id: {project_id} could not be found"
                 )
+            project.accessed_at = datetime.now(timezone.utc)
+            project = self.project_repo.update(project)
             return ProjectDTO(
                 id=project.id,
                 title=project.title,
@@ -127,6 +132,7 @@ class ProjectService:
                 section_count=project.section_count,
                 created_at=project.created_at,
                 updated_at=project.updated_at,
+                accessed_at=project.accessed_at,
                 sections=[
                     SectionDTO(
                         id=section.id,
@@ -179,6 +185,7 @@ class ProjectService:
                 section_count=project.section_count,
                 created_at=project.created_at,
                 updated_at=project.updated_at,
+                accessed_at=project.accessed_at,
             )
         except DatabaseError:
             raise

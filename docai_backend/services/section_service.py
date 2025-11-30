@@ -186,3 +186,48 @@ class SectionService:
             raise
         except Exception as e:
             raise ServiceError(str(e))
+
+    def regenerate_section_content(
+        self, section_id: str, model_name: str
+    ) -> SectionDTO:
+        try:
+            section = self.section_repo.find_by_id(section_id)
+            if section is None:
+                raise ResourceNotFoundError(f"Section with id: {section_id} not found")
+
+            new_content = self.llm_service.generate_initial_content(
+                section.project, section, model_name
+            )
+            section.content = new_content
+            section = self.section_repo.update(section)
+            return SectionDTO(
+                id=section.id,
+                title=section.title,
+                content=section.content,
+                order=section.order,
+                project_id=section.project_id,
+                refinements=[
+                    RefinementDTO(
+                        id=r.id,
+                        prompt=r.prompt,
+                        rating=r.rating,
+                        section_id=r.section_id,
+                        before_content=r.before_content,
+                        after_content=r.after_content,
+                        model=r.model,
+                    )
+                    for r in section.refinements
+                ],
+                comments=[
+                    CommentDTO(id=c.id, section_id=c.section_id, content=c.content)
+                    for c in section.comments
+                ],
+            )
+        except DatabaseError:
+            raise
+        except ResourceNotFoundError:
+            raise
+        except LLMError:
+            raise
+        except Exception as e:
+            raise ServiceError(str(e))

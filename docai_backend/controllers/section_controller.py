@@ -55,3 +55,11 @@ def update_comment(section_id: str, comment_id: str):
 def delete_comment(section_id: str, comment_id: str):
     res = service.delete_section_comment(section_id, comment_id)
     return ResponseBuilder.response(res, "comment")
+
+
+@section_blueprint.route(
+    "/<string:section_id>/regenerate/<string:model_name>", methods=["GET"]
+)
+def regenerate_section(section_id: str, model_name: str):
+    res = service.regenerate_section_content(section_id, model_name)
+    return ResponseBuilder.response(res.to_dict(), "section")
