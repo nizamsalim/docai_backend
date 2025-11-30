@@ -96,12 +96,12 @@ class ResourceNotFoundError(BaseAppException):
 
 
 class LLMError(BaseAppException):
-    status_code = 404
+    status_code = 500
 
     def __init__(
         self,
         data=None,
-        message="Am unexpected error occured in the LLM call",
+        message="An unexpected error occured in the LLM call",
         code="LLM_ERROR",
     ):
         super().__init__(message, data, code)

@@ -9,6 +9,7 @@ class RefinementDTO:
     section_id: str
     before_content: str
     after_content: str
+    model: str
 
     def to_dict(self):
         return {
@@ -18,6 +19,7 @@ class RefinementDTO:
             "sectionId": self.section_id,
             "beforeContent": self.before_content,
             "afterContent": self.after_content,
+            "model": self.model,
         }
 
 

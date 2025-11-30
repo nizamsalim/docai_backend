@@ -57,5 +57,5 @@ def update_project(project_id: str):
 
 @project_blueprint.route("/llm-test/<string:project_id>", methods=["GET"])
 def test_llm(project_id: str):
-    res = service.test_llm(project_id)
+    res = service.test_llm(project_id, "gpt")
     return ResponseBuilder.response(res, data_item="content")

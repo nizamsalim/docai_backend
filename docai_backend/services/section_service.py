@@ -18,6 +18,8 @@ from ..models.section_model import Section
 from ..models.refinement_model import Refinement
 from ..models.comment_model import Comment
 
+models = {"gemini": "gemini-2.5-flash", "llama": "llama-3.3-70b", "gpt": "gpt-oss-120b"}
+
 
 class SectionService:
     def __init__(
@@ -40,11 +42,12 @@ class SectionService:
                     message=f"Section with id: {section_id} not found"
                 )
             before_content = section.content
+            # check if current model is different from last refinement. if yes - get complete context ?
             new_content = self.llm_service.refine_section(
                 section.project_id,
                 section,
                 body.user_instruction,
-                model_name=body.model_name or "gemini",
+                model_name=models.get(body.model_name),
             )
             section.content = new_content
             section = self.section_repo.update(section)
@@ -54,6 +57,7 @@ class SectionService:
                 section_id=section.id,
                 before_content=before_content,
                 after_content=new_content,
+                model=body.model_name,
             )
             self.refinement_repo.create(refinement)
 
@@ -71,8 +75,9 @@ class SectionService:
                         section_id=r.section_id,
                         before_content=r.before_content,
                         after_content=r.after_content,
+                        model=r.model,
                     )
-                    for r in list(section.refinements)[::-1]
+                    for r in section.refinements
                 ],
                 comments=[
                     CommentDTO(id=c.id, section_id=c.section_id, content=c.content)
@@ -114,8 +119,9 @@ class SectionService:
                         section_id=r.section_id,
                         before_content=r.before_content,
                         after_content=r.after_content,
+                        model=r.model,
                     )
-                    for r in list(section.refinements)[::-1]
+                    for r in section.refinements
                 ],
                 comments=[
                     CommentDTO(id=c.id, section_id=c.section_id, content=c.content)

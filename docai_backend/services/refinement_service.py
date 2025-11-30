@@ -29,6 +29,7 @@ class RefinementService:
                 section_id=refinement.section_id,
                 before_content=refinement.before_content,
                 after_content=refinement.after_content,
+                model=refinement.model,
             )
 
         except ResourceNotFoundError:

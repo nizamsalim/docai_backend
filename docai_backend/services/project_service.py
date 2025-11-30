@@ -142,8 +142,9 @@ class ProjectService:
                                 section_id=r.section_id,
                                 before_content=r.before_content,
                                 after_content=r.after_content,
+                                model=r.model,
                             )
-                            for r in list(section.refinements)[::-1]
+                            for r in section.refinements
                         ],
                         comments=[
                             CommentDTO(
@@ -186,9 +187,9 @@ class ProjectService:
         except Exception as e:
             raise ServiceError(str(e))
 
-    def test_llm(self, project_id: str):
+    def test_llm(self, project_id: str, model_name: str):
         project = self.project_repo.find_by_id(project_id)
         section = project.sections[0]
-        res = self.llm_service.generate_initial_content(project, section, "gemini")
+        res = self.llm_service.generate_initial_content(project, section, model_name)
         print(res)
         return res
