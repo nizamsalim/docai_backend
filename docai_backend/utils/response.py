@@ -1,4 +1,5 @@
-from flask import make_response
+from flask import make_response, send_file
+from io import BytesIO
 
 
 class ResponseBuilder:
@@ -19,6 +20,20 @@ class ResponseBuilder:
     def response(data: dict | list | str, data_item: str):
         res = make_response({"success": True, data_item: data})
         return res
+
+    @staticmethod
+    def file(buffer: BytesIO, project_title: str, project_type: str):
+        mime_type = (
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            if project_type == "docx"
+            else ""
+        )
+        return send_file(
+            buffer,
+            mimetype=mime_type,
+            download_name=f"{project_title}.docx",
+            as_attachment=True,
+        )
 
     @staticmethod
     def logout():

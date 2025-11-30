@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 from ..utils.factory import get_project_service
 from ..middleware.protected import protected
 from ..schemas.project_schema import (
@@ -59,3 +59,9 @@ def update_project(project_id: str):
 def test_llm(project_id: str):
     res = service.test_llm(project_id, "gpt")
     return ResponseBuilder.response(res, data_item="content")
+
+
+@project_blueprint.route("/<string:project_id>/download", methods=["GET"])
+def export_project(project_id: str):
+    buffer, title, type = service.export_project(project_id)
+    return ResponseBuilder.file(buffer, title, type)

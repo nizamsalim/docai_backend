@@ -17,6 +17,7 @@ from ..models.section_model import Section
 from ..contracts.project_dto import ProjectDTO
 from ..contracts.section_dto import RefinementDTO, SectionDTO, CommentDTO
 from datetime import datetime, timezone
+from ..utils.export import DocumentExporter
 
 
 class ProjectService:
@@ -200,3 +201,21 @@ class ProjectService:
         res = self.llm_service.generate_initial_content(project, section, model_name)
         print(res)
         return res
+
+    def export_project(self, project_id: str):
+        try:
+            project = self.project_repo.find_by_id(project_id)
+            if project is None:
+                raise ResourceNotFoundError(
+                    f"Project with id: {project_id} could not be found"
+                )
+            buffer = None
+            if project.type == "docx":
+                buffer = DocumentExporter.generate_word(project)
+            else:
+                buffer = DocumentExporter.generate_ppt(project)
+            return buffer, project.title, project.type
+        except ResourceNotFoundError:
+            raise
+        except Exception as e:
+            raise ServiceError(str(e))
