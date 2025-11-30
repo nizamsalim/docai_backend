@@ -1,7 +1,11 @@
 from flask import Blueprint, request
 from ..utils.factory import get_project_service
 from ..middleware.protected import protected
-from ..schemas.project_schema import CreateProjectSchema, UpdateProjectSchema
+from ..schemas.project_schema import (
+    CreateProjectSchema,
+    UpdateProjectSchema,
+    GenerateSectionsSchema,
+)
 from ..utils.response import ResponseBuilder
 
 project_blueprint = Blueprint("projects", __name__)
@@ -15,6 +19,13 @@ def create_project():
     data = CreateProjectSchema(**(request.get_json()))
     res = service.create_project(data)
     return ResponseBuilder.response(res.to_dict(), data_item="project")
+
+
+@project_blueprint.route("/generate", methods=["POST"])
+def generate_initial_sections():
+    body = GenerateSectionsSchema(**(request.get_json()))
+    res = service.get_ai_generated_sections(body)
+    return ResponseBuilder.response(res, "sections")
 
 
 @project_blueprint.route("", methods=["GET"])

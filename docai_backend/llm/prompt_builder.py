@@ -1,7 +1,6 @@
 class PromptBuilder:
-    @staticmethod
     def get_initial_generation_prompt(
-        project_title: str, project_type: str, section_title: str
+        self, project_title: str, project_type: str, section_title: str
     ):
         format_prompt = ""
         if project_type == "docx":
@@ -23,6 +22,16 @@ class PromptBuilder:
             The tone should be clear, structured, and informative.
             Avoid filler sentences. Provide useful content. Include section title as heading in each section content
             Return only the requested text without any extra content.
+        """
+
+    def get_initial_sections_generation_prompt(
+        self, project_title: str, project_type: str
+    ):
+        return f"""
+            You are an AI assistant helping to create a new document of type {project_type}
+            Document title: {project_title}
+            Return 5 appropriate {"section titles" if project_type == "docx" else "slide titles"} related to the project title.
+            Return the titles as a json array. Ensure that the titles align with the main document title and the returning formatting is followed strictly.
         """
 
     def get_refinement_prompt(

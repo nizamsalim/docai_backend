@@ -4,6 +4,8 @@ from ..models.project_model import Project
 from ..models.section_model import Section
 from ..llm.providers import ModelRegistry
 from ..utils.exception import LLMError
+import json
+import re
 
 
 class LLMService:
@@ -24,6 +26,20 @@ class LLMService:
 
             provider = self.__get_provider(model_name)
             return provider.generate(prompt)
+        except Exception as e:
+            raise LLMError(str(e))
+
+    def generate_sections(
+        self, project_title: str, project_type: str, model_name="gemini"
+    ):
+        try:
+            prompt = self.prompt_builder.get_initial_sections_generation_prompt(
+                project_title, project_type
+            )
+            provider = self.__get_provider(model_name)
+            generated = provider.generate(prompt)
+            text = re.sub(r"```[a-zA-Z0-9_-]+\s*([\s\S]*?)```", r"\1", generated)
+            return json.loads(text)
         except Exception as e:
             raise LLMError(str(e))
 

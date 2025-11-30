@@ -1,9 +1,14 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field
 
 
 class SectionSchema(BaseModel):
     order: int
     title: str
+
+
+class GenerateSectionsSchema(BaseModel):
+    title: str
+    type: str
 
 
 class CreateProjectSchema(BaseModel):

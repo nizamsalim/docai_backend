@@ -4,6 +4,7 @@ from .llm_service import LLMService
 from ..schemas.project_schema import (
     CreateProjectSchema as ProjectSchema,
     UpdateProjectSchema,
+    GenerateSectionsSchema,
 )
 from ..utils.exception import (
     ServiceError,
@@ -27,6 +28,18 @@ class ProjectService:
         self.project_repo = project_repo
         self.section_repo = section_repo
         self.llm_service = llm_service
+
+    def get_ai_generated_sections(self, body: GenerateSectionsSchema):
+        try:
+            res = self.llm_service.generate_sections(body.title, body.type)
+            formatted = []
+            for i, section in enumerate(res):
+                formatted.append({"order": i, "title": section})
+            return formatted
+        except LLMError:
+            raise
+        except Exception as e:
+            raise ServiceError(str(e))
 
     def create_project(self, project: ProjectSchema) -> ProjectDTO:
         project_id = None
