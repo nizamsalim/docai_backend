@@ -92,8 +92,7 @@ class ProjectService:
         except LLMError:
             raise
         except Exception as e:
-            print(str(e))
-            raise ServiceError()
+            raise ServiceError(str(e))
 
     def get_all_projects(self) -> list[ProjectDTO]:
         try:
@@ -112,7 +111,6 @@ class ProjectService:
         except DatabaseError:
             raise
         except Exception as e:
-
             raise ServiceError(str(e))
 
     def get_project_data(self, project_id: str) -> ProjectDTO:

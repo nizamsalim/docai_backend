@@ -1,6 +1,7 @@
 from ..models.comment_model import Comment
 from ..utils.exception import DatabaseError
 from ..utils.db import db
+from sqlalchemy.exc import SQLAlchemyError
 
 
 class CommentRepository:
@@ -9,25 +10,25 @@ class CommentRepository:
             db.session.add(comment)
             db.session.commit()
             return comment
-        except:
+        except SQLAlchemyError as e:
             db.session.rollback()
-            raise DatabaseError()
+            raise DatabaseError(str(e))
 
     def update(self, comment: Comment):
         try:
             db.session.commit()
             return comment
-        except:
+        except SQLAlchemyError as e:
             db.session.rollback()
-            raise DatabaseError()
+            raise DatabaseError(str(e))
 
     def delete(self, comment: Comment):
         try:
             db.session.delete(comment)
             db.session.commit()
-        except:
+        except SQLAlchemyError as e:
             db.session.rollback()
-            raise DatabaseError()
+            raise DatabaseError(str(e))
 
     def find_by_id(self, comment_id: str) -> Comment | None:
         try:
@@ -35,5 +36,5 @@ class CommentRepository:
                 db.select(Comment).filter(Comment.id == comment_id)
             ).scalar_one_or_none()
             return comment
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(str(e))

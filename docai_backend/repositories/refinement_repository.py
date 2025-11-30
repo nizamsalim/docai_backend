@@ -10,17 +10,17 @@ class RefinementRepository:
             db.session.add(refinement)
             db.session.commit()
             return refinement
-        except:
+        except SQLAlchemyError as e:
             db.session.rollback()
-            raise DatabaseError()
+            raise DatabaseError(str(e))
 
     def update(self, refinement: Refinement):
         try:
             db.session.commit()
             return refinement
-        except:
+        except SQLAlchemyError as e:
             db.session.rollback()
-            raise DatabaseError()
+            raise DatabaseError(str(e))
 
     def find_by_id(self, section_id: str) -> Refinement | None:
         try:

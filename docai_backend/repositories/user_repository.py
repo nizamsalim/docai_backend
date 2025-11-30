@@ -1,6 +1,7 @@
 from ..models.user_model import User
 from ..utils.db import db
 from ..utils.exception import DatabaseError
+from sqlalchemy.exc import SQLAlchemyError
 
 
 class UserRepository:
@@ -10,7 +11,7 @@ class UserRepository:
                 db.select(User).filter(User.username == username)
             ).scalar_one_or_none()
             return user
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(str(e))
 
     def find_by_id(self, id: str) -> User | None:
@@ -19,7 +20,7 @@ class UserRepository:
                 db.select(User).filter(User.id == id)
             ).scalar_one_or_none()
             return user
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(str(e))
 
     def create(self, user: User):
@@ -27,6 +28,6 @@ class UserRepository:
             db.session.add(user)
             db.session.commit()
             return user
-        except Exception as e:
+        except SQLAlchemyError as e:
             db.session.rollback()
             raise DatabaseError(str(e))

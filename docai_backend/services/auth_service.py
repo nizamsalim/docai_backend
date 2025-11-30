@@ -43,8 +43,8 @@ class AuthService:
 
         except UserExistsError:
             raise
-        except:
-            raise ServiceError()
+        except Exception as e:
+            raise ServiceError(str(e))
 
     def login_user(self, user: LoginSchema) -> tuple[UserDTO, str]:
         try:
@@ -63,8 +63,7 @@ class AuthService:
         except DatabaseError:
             raise
         except Exception as e:
-            print(str(e))
-            raise ServiceError()
+            raise ServiceError(str(e))
 
     def validate_user(self, access_token: str) -> UserDTO:
         try:
@@ -82,5 +81,4 @@ class AuthService:
         except MissingAccessTokenError:
             raise
         except Exception as e:
-            print(str(e))
-            raise ServiceError()
+            raise ServiceError(str(e))
