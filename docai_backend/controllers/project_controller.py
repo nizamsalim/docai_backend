@@ -22,6 +22,7 @@ def create_project():
 
 
 @project_blueprint.route("/generate", methods=["POST"])
+@protected
 def generate_initial_sections():
     body = GenerateSectionsSchema(**(request.get_json()))
     res = service.get_ai_generated_sections(body)
@@ -55,13 +56,8 @@ def update_project(project_id: str):
     return ResponseBuilder.response(res.to_dict(), data_item="project")
 
 
-@project_blueprint.route("/llm-test/<string:project_id>", methods=["GET"])
-def test_llm(project_id: str):
-    res = service.test_llm(project_id, "gpt")
-    return ResponseBuilder.response(res, data_item="content")
-
-
 @project_blueprint.route("/<string:project_id>/download", methods=["GET"])
+@protected
 def export_project(project_id: str):
     buffer, title, type = service.export_project(project_id)
     return ResponseBuilder.file(buffer, title, type)

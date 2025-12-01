@@ -60,6 +60,7 @@ def delete_comment(section_id: str, comment_id: str):
 @section_blueprint.route(
     "/<string:section_id>/regenerate/<string:model_name>", methods=["GET"]
 )
+@protected
 def regenerate_section(section_id: str, model_name: str):
     res = service.regenerate_section_content(section_id, model_name)
     return ResponseBuilder.response(res.to_dict(), "section")
