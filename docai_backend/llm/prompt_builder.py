@@ -20,7 +20,8 @@ class PromptBuilder:
             Write a high-quality first draft for a section titled: {section_title}
             The length should be not too long, nor too short. It should have moderate length.
             The tone should be clear, structured, and informative.
-            Avoid filler sentences. Provide useful content. Include only section title as heading in each section content and not the project title
+            Avoid filler sentences. Provide useful content. 
+            Include only section title as '#' heading in each section content 
             Return only the requested text without any extra content.
         """
 

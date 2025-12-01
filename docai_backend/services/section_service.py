@@ -47,7 +47,7 @@ class SectionService:
                 section.project_id,
                 section,
                 body.user_instruction,
-                model_name=models.get(body.model_name),
+                model_name=body.model_name,
             )
             section.content = new_content
             section = self.section_repo.update(section)
@@ -57,7 +57,7 @@ class SectionService:
                 section_id=section.id,
                 before_content=before_content,
                 after_content=new_content,
-                model=body.model_name,
+                model=models.get(body.model_name),
             )
             self.refinement_repo.create(refinement)
 

@@ -18,8 +18,8 @@ service = get_section_service()
 def refine_section_content(section_id: str):
     body = RefineSectionSchema(**(request.get_json()))
     print(body.model_name)
-    # res = service.refine_section(section_id, body)
-    return ResponseBuilder.response({"success": 1}, "section")  # return only refinement
+    res = service.refine_section(section_id, body)
+    return ResponseBuilder.response(res.to_dict(), "section")  # return only refinement
 
 
 @section_blueprint.route("/<string:section_id>", methods=["PUT"])
